@@ -17,5 +17,6 @@
   },
   "homepage": "https://github.com/Bad-Science/mob-environ#readme",
   "dependencies": {
+    "socket.io-client": "^1.7.3"
   }
 }
