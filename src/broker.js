@@ -23,4 +23,12 @@ export default class Broker {
     console.log(`BROKER-CLIENT: Moving ${action} to ${locator}`);
     this._socket.emit('moveAction', locator, action);
   }
+
+  moveWithReply (locator, action) {
+    return new Promise ((resolve, reject) => {
+      this._socket.emit('moveWithReply', locator, action, function (response) {
+        resolve(response);
+      });
+    });
+  }
 }

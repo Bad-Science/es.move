@@ -21,6 +21,7 @@ function deserializer (key, value) {
 
 
 export function serializeAction (action, params) {
+  // console.log(`Serializing: ${JSON.stringify({ action: action, params: params })}`);
   return JSON.stringify({ action: action, params: params }, serializer);
 }
 

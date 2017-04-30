@@ -7,11 +7,14 @@ export default class Environment {
     this._services = {};
   }
 
-  connect () {
+  connect (callback) {
     console.log('Connecting to broker...');
     this._broker.connect(
       this._name,
-      (id) => { this._id = id; },
+      (id) => { 
+        this._id = id;
+        callback();
+       },
       (a) => { this.receive(a); }
     );
   }
@@ -35,13 +38,19 @@ export default class Environment {
 
   receive (serializedAction) {
     const deserializedAction = deserializeAction(serializedAction);
-    console.log(`receive: ${this}`);
+    // console.log(`receive: ${this}`);
     this.invoke(deserializedAction.action, deserializedAction.params);
   }
 
   move (locator, action, params) {
+    // console.log(`PARAMS$$$$$: ${Object.keys(params)} ${Object.values(params)}`);
     const serializedAction = serializeAction(action, params);
-    console.log(`move: ${this}`);
+    // console.log(`moveing: ${serializedAction}`);
     this._broker.move(locator, serializedAction);
+  }
+
+  moveAnd(locator, action, params) {
+    const serializedAction = serializeAction(action, params);
+    return this._broker.moveWithReply(action, params);
   }
 }
