@@ -1,6 +1,6 @@
-import { move, serializeAction, deserializeAction } from 'mobility';
+import { move, serializeAction, deserializeAction } from './mobility';
 
-class Environment {
+export default class Environment {
   constructor (name, broker) {
     this._name = name;
     this._broker = broker;
@@ -8,7 +8,8 @@ class Environment {
   }
 
   connect () {
-    broker.connect(
+    console.log('Connecting to broker...');
+    this._broker.connect(
       this._name,
       (id) => {this._id = id},
       this.receive

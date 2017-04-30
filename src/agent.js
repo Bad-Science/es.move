@@ -1,7 +1,3 @@
-function move (locator, action) {
-
-}
-
 class Agent {
   aync function at(environemt, action) {
     Broker.execute(environment, action);
@@ -34,5 +30,24 @@ class Agent {
     )
   }
 }
+
+
+Agent(function () {
+  
+}, { initialParams: user });
+
+
+class Agent {
+  function run(params) {
+    execute(
+      this.move('movies', function () {
+        let favMovie = this.$.movies.myFavoriteMovie(this.params.movieGenre);
+
+      }, { movieGenre: this.params.movieGenre });
+    )
+  }
+}
+
+
 
 export default Agent;

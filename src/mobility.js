@@ -1,4 +1,4 @@
-import Broker from broker;
+import Broker from './broker';
 
 function serializer (key, value) {  
   if (typeof value === 'function') {    
@@ -10,9 +10,9 @@ function serializer (key, value) {
 function deserializer (key, value) {  
   if (typeof value === 'string' && value.indexOf('function ') === 0) {   
     try { 
-      let functionTemplate = `(${value}).call(this)`;    
+      let functionTemplate = `(${value})`;    
       return new Function(functionTemplate); 
-    } catch {
+    } catch (e) {
       return value;
     }
   }  
