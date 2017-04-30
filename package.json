@@ -15,5 +15,7 @@
   "bugs": {
     "url": "https://github.com/Bad-Science/mob-environ/issues"
   },
-  "homepage": "https://github.com/Bad-Science/mob-environ#readme"
+  "homepage": "https://github.com/Bad-Science/mob-environ#readme",
+  "dependencies": {
+  }
 }
