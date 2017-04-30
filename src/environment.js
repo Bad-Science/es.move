@@ -7,7 +7,7 @@ class Environment {
     this._services = {};
   }
 
-  function connect () {
+  connect () {
     broker.connect(
       this._name,
       (id) => {this._id = id},
@@ -15,11 +15,11 @@ class Environment {
     );
   }
 
-  function registerService (name, service) {
+  registerService (name, service) {
     this._services[name] = service;
   }
 
-  function getContext (params) {
+  getContext (params) {
     return {
       $: this._services,
       envId: this._id,
@@ -28,16 +28,16 @@ class Environment {
     }
   }
 
-  function invoke (action, params) {
+  invoke (action, params) {
     action.bind(this.getContext())();
   }
 
-  function receive (serializedAction) {
+  receive (serializedAction) {
     const deserializedAction = Mobility.deserializeAction(serializedAction);
     this.invoke(deserializedAction.action, deserializedAction.params);
   }
 
-  function move (locator, action, params) {
+  move (locator, action, params) {
     const serializedAction = serializeAction(action, params);
     this._broker.move(locator, serializedAction);
   }

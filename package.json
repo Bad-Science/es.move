@@ -18,5 +18,8 @@
   "homepage": "https://github.com/Bad-Science/mob-environ#readme",
   "dependencies": {
     "socket.io-client": "^1.7.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1"
   }
 }

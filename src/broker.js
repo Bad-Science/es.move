@@ -6,7 +6,7 @@ export class Broker {
     // this.socket = io(this.url);
   }
 
-  function connect (name, setId, receive) {
+  connect (name, setId, receive) {
     this._socket = io(this.url, { query: `name=${name}` });
     this._socket.on('assignId', (id) => {
       setId(id);
@@ -14,7 +14,7 @@ export class Broker {
     });
   }
 
-  function move (locator, action) {
+  move (locator, action) {
     this._socket.emit('moveAction', locator, action);
   }
 }
