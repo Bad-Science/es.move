@@ -11,8 +11,8 @@ export default class Environment {
     console.log('Connecting to broker...');
     this._broker.connect(
       this._name,
-      (id) => {this._id = id},
-      this.receive
+      (id) => { this._id = id; },
+      (a) => { this.receive(a); }
     );
   }
 
@@ -25,21 +25,23 @@ export default class Environment {
       $: this._services,
       envId: this._id,
       params: params,
-      move: this.move
+      move: (...args) => { this.move(...args); }
     }
   }
 
   invoke (action, params) {
-    action.bind(this.getContext())();
+    action.bind(this.getContext(params))();
   }
 
   receive (serializedAction) {
-    const deserializedAction = Mobility.deserializeAction(serializedAction);
+    const deserializedAction = deserializeAction(serializedAction);
+    console.log(`receive: ${this}`);
     this.invoke(deserializedAction.action, deserializedAction.params);
   }
 
   move (locator, action, params) {
     const serializedAction = serializeAction(action, params);
+    console.log(`move: ${this}`);
     this._broker.move(locator, serializedAction);
   }
 }

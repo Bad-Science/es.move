@@ -7,19 +7,20 @@ export default class Broker {
   }
 
   connect (name, setId, receive) {
-    console.log(`BROKER: Attempting to connect and register ${name}`);
+    console.log(`BROKER-CLIENT: Attempting to connect and register ${name}`);
     this._socket = io(this.url, { query: `name=${name}` });
     this._socket.on('connect', function () {
-      console.log('BROKER: Connected to broker service!');
+      console.log('BROKER-CLIENT: Connected to broker service!');
     });
     this._socket.on('assignId', (id) => {
-      console.log(`BROKER: Registered with id: ${id}`);
+      console.log(`BROKER-CLIENT: Registered with id: ${id}`);
       setId(id);
       this._socket.on('receiveAction', receive);
     });
   }
 
   move (locator, action) {
+    console.log(`BROKER-CLIENT: Moving ${action} to ${locator}`);
     this._socket.emit('moveAction', locator, action);
   }
 }

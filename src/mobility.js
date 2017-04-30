@@ -10,7 +10,7 @@ function serializer (key, value) {
 function deserializer (key, value) {  
   if (typeof value === 'string' && value.indexOf('function ') === 0) {   
     try { 
-      let functionTemplate = `(${value})`;    
+      let functionTemplate = `(${value}).call(this)`;    
       return new Function(functionTemplate); 
     } catch (e) {
       return value;
