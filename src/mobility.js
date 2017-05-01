@@ -11,8 +11,8 @@ function deserializer (key, value) {
   if (typeof value === 'string' && value.indexOf('function ') === 0) {   
     try { 
       let functionTemplate = `return (${value}).bind(this)`;    
-      console.log(functionTemplate)
-      return new Function(functionTemplate); 
+      // console.log(functionTemplate)
+      return new Function(functionTemplate);
     } catch (e) {
       return value;
     }

@@ -1,13 +1,14 @@
 {
-  "name": "environ",
+  "name": "es.move",
   "version": "0.1.0",
   "description": "",
-  "main": "agent.js",
+  "main": "./dist/es.move.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-movies": "nodemon src/movies.environment.js --exec babel-node --presets es2015,stage-2",
-    "start-shows": "nodemon src/shows.environment.js --exec babel-node --presets es2015,stage-2"
-
+    "start-shows": "nodemon src/shows.environment.js --exec babel-node --presets es2015,stage-2",
+    "build": "babel -d dist src/",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",

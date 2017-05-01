@@ -29,21 +29,22 @@ export default class Environment {
       envId: this._id,
       params: params,
       move: (...args) => { this.move(...args); },
-      moveAnd: this.moveAnd.bind(this)
+      moveAnd: this.moveAnd.bind(this),
+      join: (...args) => { return Promise.all(...args); }
     }
   }
 
   invoke (action, params) {
     let theAction = action.bind(this.getContext(params))
-    console.log(theAction.toString());
+    // console.log(theAction.toString());
     return theAction();
   }
 
   receive (serializedAction, callback) {
     const deserializedAction = deserializeAction(serializedAction);
-    console.log(`receive: ${this}`);
+    // console.log(`receive: ${this}`);
     const actionResult = this.invoke(deserializedAction.action, deserializedAction.params)();
-    console.log(`result: ${actionResult}`)
+    // console.log(`result: ${actionResult}`)
     if (typeof callback === 'function') {
       callback(actionResult);
     }
