@@ -3,7 +3,6 @@ import io from 'socket.io-client';
 export default class Broker {
   constructor (url) {
     this.url = url;
-    // this.socket = io(this.url);
   }
 
   connect (name, setId, receive) {
@@ -15,13 +14,13 @@ export default class Broker {
     this._socket.on('environment_register', (id) => {
       console.log(`BROKER-CLIENT: Registered with id: ${id}`);
       setId(id);
-      this._socket.on('agent_move', receive);
-      this._socket.on('agent_away', receive);
     });
+    this._socket.on('agent_move', receive);
+    this._socket.on('agent_away', receive);
   }
 
   move (locator, action) {
-    console.log(`BROKER-CLIENT: Moving ${action} to ${locator}`);
+    // console.log(`BROKER-CLIENT: Moving ${action} to ${locator}`);
     this._socket.emit('agent_move', locator, action);
   }
 
