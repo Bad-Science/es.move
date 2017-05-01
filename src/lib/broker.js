@@ -12,22 +12,22 @@ export default class Broker {
     this._socket.on('connect', function () {
       console.log('BROKER-CLIENT: Connected to broker service!');
     });
-    this._socket.on('assignId', (id) => {
+    this._socket.on('environment_register', (id) => {
       console.log(`BROKER-CLIENT: Registered with id: ${id}`);
       setId(id);
-      this._socket.on('receiveAction', receive);
-      this._socket.on('receiveWithReply', receive);
+      this._socket.on('agent_move', receive);
+      this._socket.on('agent_away', receive);
     });
   }
 
   move (locator, action) {
     console.log(`BROKER-CLIENT: Moving ${action} to ${locator}`);
-    this._socket.emit('moveAction', locator, action);
+    this._socket.emit('agent_move', locator, action);
   }
 
-  moveWithReply (locator, action) {
+  away (locator, action) {
     return new Promise ((resolve, reject) => {
-      this._socket.emit('moveWithReply', locator, action, function (response) {
+      this._socket.emit('agent_away', locator, action, function (response) {
         resolve(response);
       });
     });

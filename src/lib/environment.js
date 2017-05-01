@@ -59,7 +59,7 @@ export default class Environment {
 
   away (locator, action, params) {
     const serializedAction = serializeAction(action, params);
-    return this._broker.moveWithReply(locator, serializedAction);
+    return this._broker.away(locator, serializedAction);
   }
 
   join (...args) {
