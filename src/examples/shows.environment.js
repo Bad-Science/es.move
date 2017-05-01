@@ -1,5 +1,5 @@
-import Broker from './broker';
-import Environment from './environment';
+import { Broker, Environment } from '../es.move';
+
 
 const broker = new Broker('http://localhost:3000');
 const environment = new Environment('shows', broker);
