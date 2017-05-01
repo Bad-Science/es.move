@@ -1,6 +1,6 @@
 {
   "name": "es.move",
-  "version": "0.1.0",
+  "version": "0.1.1-0",
   "description": "",
   "main": "./dist/es.move.js",
   "scripts": {
