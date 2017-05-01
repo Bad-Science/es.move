@@ -16,6 +16,7 @@ export default class Broker {
       console.log(`BROKER-CLIENT: Registered with id: ${id}`);
       setId(id);
       this._socket.on('receiveAction', receive);
+      this._socket.on('receiveWithReply', receive);
     });
   }
 

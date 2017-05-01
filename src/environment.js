@@ -15,7 +15,7 @@ export default class Environment {
         this._id = id;
         callback();
        },
-      (a) => { this.receive(a); }
+      (a, cb) => { this.receive(a, cb); }
     );
   }
 
@@ -28,18 +28,30 @@ export default class Environment {
       $: this._services,
       envId: this._id,
       params: params,
-      move: (...args) => { this.move(...args); }
+      move: (...args) => { this.move(...args); },
+      moveAnd: this.moveAnd.bind(this)
     }
   }
 
   invoke (action, params) {
-    action.bind(this.getContext(params))();
+    let theAction = action.bind(this.getContext(params))
+    console.log(theAction.toString());
+    return theAction();
   }
 
-  receive (serializedAction) {
+  receive (serializedAction, callback) {
     const deserializedAction = deserializeAction(serializedAction);
-    // console.log(`receive: ${this}`);
-    this.invoke(deserializedAction.action, deserializedAction.params);
+    console.log(`receive: ${this}`);
+    const actionResult = this.invoke(deserializedAction.action, deserializedAction.params)();
+    console.log(`result: ${actionResult}`)
+    if (typeof callback === 'function') {
+      callback(actionResult);
+    }
+  }
+
+  receiveAnd (serializedAction, callback) {
+    const deserializedAction = deserializeAction(serializedAction);
+    this.invoke(deserializedAction.action, deserializedAction.params)
   }
 
   move (locator, action, params) {
@@ -51,6 +63,6 @@ export default class Environment {
 
   moveAnd(locator, action, params) {
     const serializedAction = serializeAction(action, params);
-    return this._broker.moveWithReply(action, params);
+    return this._broker.moveWithReply(locator, serializedAction);
   }
 }

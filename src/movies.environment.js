@@ -11,10 +11,10 @@ environment.registerService('movies', {
 });
 
 environment.connect(function () {
-  environment.invoke(function () {
-    console.log(this.$.movies.myFavoriteMovie());
-    this.move('movies', function () {
-      console.log(this.params.message);
-    }, { message: 'Final Message' });
-  }, { message: 'Initial Message' });
+  // environment.invoke(function () {
+  //   console.log(this.$.movies.myFavoriteMovie());
+  //   this.move('movies', function () {
+  //     console.log(this.params.message);
+  //   }, { message: 'Final Message' });
+  // }, { message: 'Initial Message' });
 });
