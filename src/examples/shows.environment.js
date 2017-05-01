@@ -1,6 +1,5 @@
 import { Broker, Environment } from '../es.move';
 
-
 const broker = new Broker('http://localhost:3000');
 const environment = new Environment('shows', broker);
 
@@ -18,27 +17,31 @@ let goToMovies = function () {
 };
 
 let goToMoviesAndComeBack = function () {
-  this.moveAnd('movies', function () {
+  this.away('movies', function () {
     console.log('Yay Im at the movies!');
+    // return this.away('stage', function () {
+    //   console.log(this.params.testParam);
+    // }, { testParam: 'hellStage' });
     return this.$.movies.myFavoriteMovie();
   }).then((val) => {
     console.log(`And now I'm back at the show! My favorite movie was ${val}}`);
-    return this.moveAnd('movies', function () {
+    return this.away('movies', function () {
       console.log(`Seeing ${this.$.movies.myFavoriteMovie()} again!!!`);
+      return 'yayayayayaya';
     })
-  }).then(() => {
+  }).then((val) => {
     this.move('movies', function () {
-      console.log('Back to the movies!');
-    });
+      console.log(`Back to the movies! // ${this.params.val}`);
+    }, { val });
   });
 };
 
 let getARandomNumber = function (number) {
-  return this.moveAnd('movies', function () {
+  return this.away('movies', function () {
     let randomNumber = Math.random() * this.params.number;
     console.log(randomNumber);
     // for (let i = Date.now(); Date.now() < i + 5000;);
-    // let favShow = await this.moveAnd('shows', function () {
+    // let favShow = await this.away('shows', function () {
     //   return this.$.shows.myFavoriteShow();
     // })
     return { number: this.params.number, randomNumber };
@@ -55,12 +58,12 @@ let thereAndBack = function () {
   });
 };
 
-environment.connect(function () {
+environment.connect(function (run) {
   // environment.invoke(goToMovies);
 
-  environment.invoke(goToMoviesAndComeBack);
+  environment.run(goToMoviesAndComeBack);
   
-  environment.invoke(async function () {
+  environment.run(async function () {
     // Promise.all([0, 1, 2, 3, 4, 5].map(getARandomNumber.bind(this))).then((tokens) => {
     //   console.log(tokens);
     // });

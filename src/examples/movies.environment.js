@@ -9,7 +9,7 @@ environment.registerService('movies', {
   }
 });
 
-environment.connect(function () {
+environment.connect(function (run) {
   // environment.invoke(function () {
   //   console.log(this.$.movies.myFavoriteMovie());
   //   this.move('movies', function () {

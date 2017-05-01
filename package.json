@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-movies": "nodemon src/examples/movies.environment.js --exec babel-node --presets es2015,stage-2",
     "start-shows": "nodemon src/examples/shows.environment.js --exec babel-node --presets es2015,stage-2",
+    "start-stage": "nodemon src/examples/stage.environment.js --exec babel-node --presets es2015,stage-2",
     "build": "babel -d dist src/",
     "prepublish": "npm run build"
   },
