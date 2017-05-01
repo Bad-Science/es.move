@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Bad-Science/mob-environ.git"
+    "url": "git+https://github.com/Bad-Science/es.move.git"
   },
   "author": "Richie Young",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Bad-Science/mob-environ/issues"
+    "url": "https://github.com/Bad-Science/es.move/issues"
   },
-  "homepage": "https://github.com/Bad-Science/mob-environ#readme",
+  "homepage": "https://github.com/Bad-Science/es.move#readme",
   "dependencies": {
     "socket.io-client": "^1.7.3"
   },
