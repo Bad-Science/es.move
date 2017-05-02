@@ -1,135 +1,139 @@
 # es.move - A Framework For Writing Distributed Javascript Applications Using Mobile Agents
 
 
-# Usage/API
+## Usage/API
 
 
-## Creating an Environment
+### Creating an Environment
 
 The simplest environment is the Stage, an environment with no services and no agents.
 
+```js    
+/* stage environment */
+import { Broker, Environment } from 'es.move';
+const environment = new Environment('stage', new Broker('http://localhost:4815'));
 
-    /* stage environment */
-    import { Broker, Environment } from 'es.move';
-    const environment = new Environment('stage', new Broker('http://localhost:4815'));
-    
-    environment.connect(function () {
-      /* I do nothing! :) */
-    });
+environment.connect(function () {
+  /* I do nothing! :) */
+});
+```
 
 Here we have a stage, ready to accept agents from other environments. Every instance of an environment is assigned a unique id.
 
-## Creating an Agent
+### Creating an Agent
 
 Environments aren’t particularly useful without Agents. Creating an agent is as simple as writing a function and calling `run()` .
 
+```js
+environment.connect(function () {
+  environment.run(function () {
+    let onePlusOne = 1 + 1;
+    console.log(`One plus one equals ${onePlusOne}`);
+  });
+});
+```
 
-    environment.connect(function () {
-      environment.run(function () {
-        let onePlusOne = 1 + 1;
-        console.log(`One plus one equals ${onePlusOne}`);
-      });
-    });
-
-
-## Mobile Agents
+### Mobile Agents
 
 Agents become interesting when they start moving. In addition to our stage, we can create another environment with a mobile agent. Agents can autonomously move between environments by calling `this.move(locator, action, params)` .
 
+```js
+/**/
+import { Broker, Environment } from 'es.move';
+const environment = new Environment('i_have_agents', new Broker('http://localhost:4815'));
 
-    /**/
-    import { Broker, Environment } from 'es.move';
-    const environment = new Environment('i_have_agents', new Broker('http://localhost:4815'));
-    
-    environment.connect(function () {
-      environment.run(function () {
-        console.log("This will print where I start...");
-        this.move('stage', function () {
-          console.log("And this will print where I move to!");
-        });
-      });
+environment.connect(function () {
+  environment.run(function () {
+    console.log("This will print where I start...");
+    this.move('stage', function () {
+      console.log("And this will print where I move to!");
     });
+  });
+});
+```
 
 The first parameter of `this.move()` is the location the agent should move to, and the second is how the agent should perform in its new environment.
 
-## Moving with Data
+### Moving with Data
 
 Agents are stateless, and variables above the scope of the function passed to `move()` will not be available after the agent moves. This has the important side effect of agents only having access to the objects they are explicitly given. Any data an agent should take with it when it moves must be explicitly given to `this.move()` as a parameter. 
 
+```js
+environment.connect(function () {
+  environment.run(function () {
+    let message = 'Hello from i_have_agents!';
+    this.move('stage', function () {
+      console.log(this.params.message);
+    }, { message });
+  });
+});
+```
 
-    environment.connect(function () {
-      environment.run(function () {
-        let message = 'Hello from i_have_agents!';
-        this.move('stage', function () {
-          console.log(this.params.message);
-        }, { message });
-      });
-    });
-
-
-## Interacting With the Environment
+### Interacting With the Environment
 
 Environments can expose external objects to agents by dependency injection. Dependencies are called Services, and are automatically injected into any agent running in the environment. Services can be added by calling `registerService(name, service)`.
 
+```js
+const environment = new Environment('my_data', new Broker('http://localhost:4815'));
 
-    const environment = new Environment('my_data', new Broker('http://localhost:4815'));
-    
-    environment.registerService('myDataService', {
-      getMyData: () => {
-        return 'Some Data';
-      }
-    });
-    
-    environment.connect();
+environment.registerService('myDataService', {
+  getMyData: () => {
+    return 'Some Data';
+  }
+});
+
+environment.connect();
+```
 
 Any agent running in a `my_data` environment can now access the `myDataService` service. Services are exposed through the property `this.$`.
 
+```js
+const environment = new Environment('no_data_here', new Broker('http://localhost:4815'));
 
-    const environment = new Environment('no_data_here', new Broker('http://localhost:4815'));
-    
-    environment.connect(function () {
-      environment.run(function () {
-        this.move('my_data', function () {
-          console.log(this.$.myDataService.getMyData()); // prints 'Some Data' at the my_data environment
-        });
-      });
+environment.connect(function () {
+  environment.run(function () {
+    this.move('my_data', function () {
+      console.log(this.$.myDataService.getMyData()); // prints 'Some Data' at the my_data environment
     });
+  });
+});
+```
 
-
-## Moving Data Between Environments
+### Moving Data Between Environments
 
 We can amend our `no_data_here` environment to include a data store service, and then populate that data store with data from the `my_data` environment. We can pass the locator of the starting environment as a parameter to ensure the agent returns to the same instance at which it started.
 
+```js
+const environment = new Environment('i_store_data', new Broker('http://localhost:4815'));
 
-    const environment = new Environment('i_store_data', new Broker('http://localhost:4815'));
-    
-    let dummyDataStore = new Map()
-    environment.registerService('dataStore', dummyDataStore);
-    
-    environment.connect(function () {
-      environment.run(function () {
-        this.move('my_data', function () {
-          let someData = this.$.myDataService.getMyData();
-            this.move(this.params.origin, function () {
-              this.$.dataStore.set('myData', someData);
-            }, { someData });
-          this.$.dataStore.set('show', this.params.myData);
-          console.log(this.$.dataStore.get('show'));
-        }, { origin: this.envLocator });
-      });
-    });
+let dummyDataStore = new Map()
+environment.registerService('dataStore', dummyDataStore);
+
+environment.connect(function () {
+  environment.run(function () {
+    this.move('my_data', function () {
+      let someData = this.$.myDataService.getMyData();
+        this.move(this.params.origin, function () {
+          this.$.dataStore.set('myData', someData);
+        }, { someData });
+      this.$.dataStore.set('show', this.params.myData);
+      console.log(this.$.dataStore.get('show'));
+    }, { origin: this.envLocator });
+  });
+});
+```
 
 Our dummy data store could easily be replaced with a shared key-value store e.g., redis. This is however a bit verbose, so a convenient abstraction is provided for moving to an environment and returning with a value. `this.away()` moves an agent to an environment, then resumes execution in the origin environment when it is finished executing. `this.away()` returns a native Promise that resolves with the return value of the away agent.
 
-
-    environment.run(function () {
-      this.away('my_data', function () {
-        return this.$.myDataService.getMyData();
-      }).then((someData) => {
-        console.log(someData); // prints someData in the origin environment
-      });
-    });
-
+```js
+environment.run(function () {
+  this.away('my_data', function () {
+    return this.$.myDataService.getMyData();
+  }).then((someData) => {
+    console.log(someData); // prints someData in the origin environment
+  });
+});
+```
 
 # Abstract
 # Overview
