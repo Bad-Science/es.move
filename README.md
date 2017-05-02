@@ -115,9 +115,8 @@ environment.connect(function () {
       let someData = this.$.myDataService.getMyData();
         this.move(this.params.origin, function () {
           this.$.dataStore.set('myData', someData);
+          console.log(this.$.dataStore.get('show'));
         }, { someData });
-      this.$.dataStore.set('show', this.params.myData);
-      console.log(this.$.dataStore.get('show'));
     }, { origin: this.envLocator });
   });
 });
