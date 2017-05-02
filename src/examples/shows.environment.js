@@ -58,6 +58,16 @@ let thereAndBack = function () {
   });
 };
 
+let randomArray = (length, max) => [...new Array(length)]
+  .map(() => Math.round(Math.random() * max));
+
+let getAverage = function (list) {
+  return this.away('stage', function () {
+    let sum = this.params.list.reduce((b, a) => a += b );
+    return sum / this.params.list.length
+  }, { list });
+};
+
 environment.connect(function (run) {
   // environment.invoke(goToMovies);
 
@@ -71,7 +81,7 @@ environment.connect(function (run) {
     }, { myData });
   });
   
-  environment.run( function () {
+  environment.run(async function () {
     // Promise.all([0, 1, 2, 3, 4, 5].map(getARandomNumber.bind(this))).then((tokens) => {
     //   console.log(tokens);
     // });
@@ -79,5 +89,18 @@ environment.connect(function (run) {
     // let agents = inputs.map(getARandomNumber.bind(this));
     // let results = await this.join(agents);
     // console.log(results);
+
+    // this.join(
+    //   getARandomNumber.bind(this)(1),
+    //   getARandomNumber.bind(this)(2)
+    // ).then((results) => {
+    //   console.log(results);
+    // });
+    
+    let inputData = [100, 200, 50, 20].map((x) => randomArray(1000, x));
+    let agents = inputData.map(getAverage.bind(this));
+    this.join(agents).then((results) => {
+      console.log(results);
+    });
   });
 });

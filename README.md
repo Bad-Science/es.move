@@ -135,6 +135,66 @@ environment.run(function () {
 });
 ```
 
+### Concurrent Agents
+
+An agent may call `move` or `away` multiple times in the same scope to perform tasks in multiple environments concurrently.
+
+```js
+this.away('my_data', function () {
+  return this.$.myDataService.getMyData();
+}).then((someData) => {
+  console.log(someData); // prints someData in the origin environment
+});
+this.away('other_data', function () {
+  return this.$.otherDataService.getOtherData();
+}).then((otherData) => {
+  console.log(otherData); // prints otherData in the origin environment
+});
+```
+
+### Join Continuations
+
+When performing actions concurrently, it is often necessary to then join these actions with a continuation. The framework provides a primitive `join`, which can join an arbitrary number of away actions. Because `away` returns a native promise, multiple `away` actions can easily be joined without blocking the thread using the native `Promise.all()`. `join` is implemented as a wrapper around this native function. The `join` promise resolves when all `away`s have returned with an array of the returned values.
+
+```js
+this.join(
+  this.away('my_data', function () {
+    return this.$.myDataService.getMyData();
+  }),
+  this.away('other_data', function () {
+    return this.$.otherDataService.getOtherData();
+  })
+).then((values) => {
+  console.log(values); // prints [ someData, otherData ]
+});
+```
+
+`join` can also accept an array of `away` actions. This is very useful for dynamically distributing work across the available environments, and can be used to implement distributed algorithms. Unless an environment id is specified in the locator, the `away` agents will be distributed evenly amongst the available instances of the specified environment name.
+
+```js
+let randomArray = (length, max) => [...new Array(length)]
+  .map(() => Math.round(Math.random() * max));
+
+let getAverage = function (list) {
+  return this.away('stage', function () {
+    let sum = this.params.list.reduce((b, a) => a += b );
+    return sum / this.params.list.length
+  }, { list });
+};
+
+environment.connect(function () {
+  environment.run(function () {
+    let inputData = [100, 200, 50, 20].map((x) => randomArray(1000, x));
+    let agents = inputData.map(getAverage.bind(this));
+    this.join(agents).then((results) => {
+      console.log(results);
+    });
+  });
+});
+
+```
+
+
 # Abstract
 # Overview
 

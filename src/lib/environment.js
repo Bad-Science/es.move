@@ -62,7 +62,9 @@ export default class Environment {
     return this._broker.away(locator, serializedAction);
   }
 
-  join (...args) {
-    return Promise.all(...args);
+  join () {
+    if (typeof arguments[0][Symbol.iterator] === 'function')
+      return Promise.all(arguments[0]);
+    return Promise.all(arguments);
   }
 }
