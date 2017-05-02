@@ -61,9 +61,17 @@ let thereAndBack = function () {
 environment.connect(function (run) {
   // environment.invoke(goToMovies);
 
-  environment.run(goToMoviesAndComeBack);
+  // environment.run(goToMoviesAndComeBack);
   
-  environment.run(async function () {
+  environment.run(function () {
+    let myData = this.$.shows.myFavoriteShow();
+    this.move('movies', function () {
+      this.$.dataStore.set('show', this.params.myData);
+      console.log(this.$.dataStore.get('show'));
+    }, { myData });
+  });
+  
+  environment.run( function () {
     // Promise.all([0, 1, 2, 3, 4, 5].map(getARandomNumber.bind(this))).then((tokens) => {
     //   console.log(tokens);
     // });
