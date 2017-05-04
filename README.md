@@ -193,6 +193,30 @@ environment.connect(function () {
 
 ```
 
+## Examples
+
+### 'Serverless' Chat Room
+
+```js
+const environment = new Environment('web_browser', new Broker('http://localhost:4815'));
+
+let submitButton = document.querySelector('#submit');
+let inputField = document.querySelector('#input');
+let messageLog = document.querySelector('#messageLog');
+
+environment.registerService('messageLog', messageLog);
+environment.connect(function () {
+  submitButton.onclick = function () {
+    environment.run(function () {
+      let message = inputField.text();
+      this.move('web_browser:all', function () {
+        this.$.messageLog.innerHTML += `<br>${message}`;
+      }, { message });
+    });
+  };
+});
+
+```
 
 # Abstract
 # Overview
