@@ -31,7 +31,9 @@ The framework is implemented in ECMAScript 6 (Javascript). The environment frame
 
 Additionally, this will allow a web page to act just as any other environment. A web page environment may inject as an agent dependency some interface to the DOM or some state manager, allowing an agent dispatched from the same or another location to make changes to the page and/or state based on some data or event. This may be particularly powerful for constructing dynamic web pages that need to access data from many sources and are involved in many asynchronous and synchronous events. Some of the functionality may have to be heavily restricted in browser environments however to ensure the security of the system.
 
-This is the first iteration of the framework, and the next iteration will focus on refining the mobility primitives and improving the middleware.
+### Status
+
+This is the first iteration of the framework, and although it is very incomplete the mobility functions have been implemented mostly work as designed. The next iteration will focus on refining the mobility primitives and improving the middleware as well as fixing some bugs. There are significant security concerns with mobile agent frameworks which have yet to be explored fully. In its current form, this framework should not be exposed to the internet as it would be very easy to compromise and inject malicious code into the system. These issues will be addressed in future releases.
 
 ## Usage
 
