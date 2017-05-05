@@ -33,16 +33,13 @@ Additionally, this will allow a web page to act just as any other environment. A
 
 This is the first iteration of the framework, and the next iteration will focus on refining the mobility primitives and improving the middleware.
 
----
-
-## Usage/API
+## Usage
 
 ### Creating an Environment
 
 The simplest environment is the Stage, an environment with no services and no agents.
 
 ```js    
-/* stage environment */
 import { Broker, Environment } from 'es.move';
 const environment = new Environment('stage', new Broker('http://localhost:4815'));
 
